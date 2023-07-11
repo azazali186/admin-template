@@ -1,0 +1,19 @@
+{
+  "dynamite_bi": "Template Admin",
+  "login": "Login",
+  "register": "Register",
+  "language": "Language",
+  "email": "Email",
+  "enter_your_email": "Enter your email",
+  "password": "Password",
+  "enter_password": "Enter password",
+  "six_digits_code": "Six Digit Code",
+  "google_authenticator": "Google Authenticator",
+  "bi_admin": "Template Admin",
+  "dashboard": "Dashboard",
+  "home": "Home",
+  "user_managerment": "User Managerment",
+  "user_list": "User List",
+  "users": "Users",
+  "page__login": "Login Page"
+}

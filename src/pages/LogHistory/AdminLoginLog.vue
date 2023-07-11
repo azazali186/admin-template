@@ -1,0 +1,212 @@
+<template>
+  <q-page>
+    <q-card class="">
+      <q-card-section>
+        <q-table
+          flat
+          class="q-pt-md"
+          color="primary"
+          :loading="loading"
+          :rows="items"
+          row-key="id"
+          :columns="adminColumns"
+          v-model:pagination="pagination"
+          :filter="filters"
+          @request="onRequest"
+          :rows-per-page-options="[10, 15, 20, 50, 100, 150, 200, 500]"
+          binary-state-sort
+          :selected="selected"
+          :rows-per-page-label="$t(Utils.getKey('Records per page'))"
+        >
+          <template v-slot:top>
+            <q-input
+              dense
+              outlined
+              debounce="500"
+              v-model="filters.ip_address"
+              :placeholder="$t(Utils.getKey('Login IP'))"
+              style="width: 150px"
+              class="q-mr-sm q-mt-xs"
+            />
+
+            <q-select
+              class="q-mr-sm q-mt-xs"
+              v-model="filters.role_id"
+              :options="roles"
+              outlined
+              dense
+              emit-value
+              map-options
+              option-value="id"
+              option-label="name"
+              use-input
+              @filter="filterRole"
+              clearable
+              :label="
+                filters.role_id
+                  ? $t(Utils.getKey('Roles'))
+                  : $t(Utils.getKey('All Roles'))
+              "
+              style="width: 200px"
+            />
+
+            <el-date-picker
+              class="q-mt-xs q-mr-sm input_whiteF"
+              v-model="filters.dates"
+              type="daterange"
+              :range-separator="$t(Utils.getKey('To'))"
+              :start-placeholder="$t(Utils.getKey('Start date'))"
+              :end-placeholder="$t(Utils.getKey('End date'))"
+              value-format="YYYY-MM-DD"
+            />
+            <q-btn
+              class="q-mr-sm q-mt-xs"
+              dense
+              color="primary"
+              icon="mdi-filter-remove-outline"
+              rounded
+              @click="resetFilters"
+            />
+          </template>
+
+          <!-- header column -->
+          <template v-slot:header-cell="props">
+            <q-th :props="props">
+              {{
+                props.col.label === "#"
+                  ? props.col.label
+                  : $t(Utils.getKey(props.col.label))
+              }}
+            </q-th>
+          </template>
+
+          <template v-slot:body-cell-sl="props">
+            <q-td class="text-left">
+              {{ props.rowIndex + 1 }}
+            </q-td>
+          </template>
+
+          <template v-slot:body-cell-user_agent="props">
+            <q-td class="text-center">
+              <span class="cursor-pointer q-ma-none">
+                {{ getUserAgent(props.row.user_agent) }}
+              </span>
+            </q-td>
+          </template>
+          <!-- no data -->
+          <template v-slot:no-data>
+            <q-icon
+              style="margin-right: 5px"
+              class="fas fa-exclamation-triangle"
+            />
+            {{ $t(Utils.getKey("No matching records found")) }}
+          </template>
+        </q-table>
+      </q-card-section>
+    </q-card>
+  </q-page>
+</template>
+
+<script setup>
+import { onMounted, reactive, ref, computed, watch } from "vue";
+import { useQuasar } from "quasar";
+import moment from "moment";
+import useTable from "../../composables/useTable";
+import useLoginLog from "../../composables/useLoginLog";
+import useACL from "../../composables/useACL";
+import Utils from "../../helpers/Utils";
+// import Breadcrumbs from "../../components/Menu/BreadCrumbs.vue";
+import { useI18n } from "vue-i18n";
+import _ from "lodash";
+
+const { t } = useI18n();
+var uaParser = require("ua-parser-js");
+const $q = useQuasar();
+const { loading, adminColumns, items, paginateAdmins } = useLoginLog();
+const { getAllRoles } = useACL();
+const { pagination, onRequest, selected } = useTable(paginateAdmins);
+
+const roles = ref([]);
+let rolesTemp = [];
+//range.value = moment().format("YYYY/MM/DD");
+const defaultDate = [
+  moment().startOf("day").format("YYYY-MM-DD"),
+  moment().endOf("day").format("YYYY-MM-DD"),
+];
+
+const filters = reactive({
+  user_id: "",
+  ip_address: "",
+  role_id: "",
+  dates: defaultDate,
+});
+
+Promise.all([initRoles()]);
+
+onMounted(() => {
+  onRequest({
+    pagination: {
+      ...pagination.value,
+      sortBy: "login_logs.created_at",
+      descending: true,
+    },
+    filter: { ...filters },
+  });
+});
+
+async function initRoles() {
+  try {
+    const response = await getAllRoles();
+    roles.value = rolesTemp = response.data;
+  } catch (err) {}
+}
+
+const getUserAgent = (uaString) => {
+  let parsed = uaParser(uaString);
+  let ua = "";
+
+  // if (typeof parsed.device.model !== "undefined") {
+  //   ua += `${t(Utils.getKey("Device"))}: ${t(
+  //     Utils.getKey(parsed.device.model)
+  //   )}, `;
+  // } else {
+  //   ua += `${t(Utils.getKey("Device"))}: ${getDeviceName(parsed.os.name)}, `;
+  // }
+
+  // if (typeof parsed.os.name !== "undefined") {
+  //   ua += `${t(Utils.getKey("OS"))}: ${parsed.os.name} ${parsed.os.version}, `;
+  // }
+
+  // if (typeof parsed.browser.name !== "undefined") {
+  //   ua += `${t(Utils.getKey("Browser"))}: ${parsed.browser.name} ${
+  //     parsed.browser.version
+  //   }`;
+  // }
+
+  return getDeviceName(parsed.os.name);
+};
+
+const getDeviceName = (os) => {
+  if (os == undefined || os == null || os == "" || !os) {
+    return "N/A";
+  }
+
+  let pcs = ["Windows", "Linux", "Unix", "MacOS"];
+
+  if (pcs.includes(os)) {
+    return "PC";
+  }
+
+  return os;
+};
+
+const resetFilters = () => {
+  for (const [key, value] of Object.entries(filters)) {
+    filters[key] = "";
+  }
+};
+
+const filterRole = (val, update) => {
+  roles.value = Utils.filterDropdownOptions(rolesTemp, val, update, "name");
+};
+</script>

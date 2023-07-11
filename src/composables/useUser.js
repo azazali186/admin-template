@@ -10,10 +10,12 @@ export default function useUser() {
     deleting: false,
     items: [],
   });
-  const token = localStorage.getItem('bi-admin-token') ? localStorage.getItem('bi-admin-token') : state.token
+  const token = localStorage.getItem("template-admin-token")
+    ? localStorage.getItem("template-admin-token")
+    : state.token;
   const headers = {};
   if (token) {
-    headers.authorization = "Bearer " + token
+    headers.authorization = "Bearer " + token;
   }
 
   const columns = [
@@ -125,7 +127,9 @@ export default function useUser() {
   const updatePassword = async (id, data) => {
     try {
       state.saving = true;
-      return await api.post(`/users-password/${id}`, data, { headers: headers });
+      return await api.post(`/users-password/${id}`, data, {
+        headers: headers,
+      });
     } catch (err) {
       //throw Error(Utils.getErrorMessage(err));
       throw Utils.getErrorMessage(err);
@@ -160,12 +164,15 @@ export default function useUser() {
       props.filter !== undefined
         ? Object.assign(props.pagination, { ...props.filter })
         : props.pagination;
-    let parameter = Object.entries(params).map(([k, v]) => `${k}=${v}&`).join("")
+    let parameter = Object.entries(params)
+      .map(([k, v]) => `${k}=${v}&`)
+      .join("");
     try {
+      const response = await api.get(`/users?${parameter.slice(0, -1)}`, {
+        headers: headers,
+      });
 
-      const response = await api.get(`/users?${parameter.slice(0, -1)}`, { headers: headers });
-
-      console.log('response    ', response.data)
+      console.log("response    ", response.data);
 
       state.items = response.data.data;
       state.loading = false;
@@ -179,7 +186,9 @@ export default function useUser() {
 
   const all = async () => {
     try {
-      const response = await api.get(`/users?${parameter.slice(0, -1)}`, { headers: headers });
+      const response = await api.get(`/users?${parameter.slice(0, -1)}`, {
+        headers: headers,
+      });
       return response;
     } catch (err) {
       //throw Error(Utils.getErrorMessage(err));
@@ -189,7 +198,9 @@ export default function useUser() {
 
   const verifyUser2FA = async (data) => {
     try {
-      const response = await api.post("/auth/2fa/verify-user", data, { headers: headers });
+      const response = await api.post("/auth/2fa/verify-user", data, {
+        headers: headers,
+      });
       return response;
     } catch (err) {
       //throw Error(Utils.getErrorMessage(err));
@@ -199,7 +210,9 @@ export default function useUser() {
 
   const verifyCode = async (data) => {
     try {
-      const response = await api.post("/auth/2fa/verify-code", data, { headers: headers });
+      const response = await api.post("/auth/2fa/verify-code", data, {
+        headers: headers,
+      });
       return response;
     } catch (err) {
       //throw Error(Utils.getErrorMessage(err));
@@ -209,7 +222,9 @@ export default function useUser() {
 
   const enableGa = async (data) => {
     try {
-      const response = await api.post("/auth/2fa/enable-ga", data, { headers: headers });
+      const response = await api.post("/auth/2fa/enable-ga", data, {
+        headers: headers,
+      });
       return response;
     } catch (err) {
       //throw Error(Utils.getErrorMessage(err));
@@ -231,6 +246,6 @@ export default function useUser() {
     all,
     verifyUser2FA,
     verifyCode,
-    enableGa
+    enableGa,
   };
 }

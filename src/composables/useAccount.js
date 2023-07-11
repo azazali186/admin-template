@@ -80,10 +80,12 @@ export default function useAccount() {
     }, */
   ];
 
-  const token = localStorage.getItem('bi-admin-token') ? localStorage.getItem('bi-admin-token') : state.token
+  const token = localStorage.getItem("template-admin-token")
+    ? localStorage.getItem("template-admin-token")
+    : state.token;
   const headers = {};
   if (token) {
-    headers.authorization = "Bearer " + token
+    headers.authorization = "Bearer " + token;
   }
 
   const add = async (data) => {
@@ -124,7 +126,9 @@ export default function useAccount() {
 
   const get = async (id) => {
     try {
-      const response = await api.get(`/transactions/${id}`, { headers: headers });
+      const response = await api.get(`/transactions/${id}`, {
+        headers: headers,
+      });
       return response;
     } catch (err) {
       //throw Error(Utils.getErrorMessage(err));
@@ -138,9 +142,14 @@ export default function useAccount() {
       props.filter !== undefined
         ? Object.assign(props.pagination, { ...props.filter })
         : props.pagination;
-    let parameter = Object.entries(params).map(([k, v]) => `${k}=${v}&`).join("")
+    let parameter = Object.entries(params)
+      .map(([k, v]) => `${k}=${v}&`)
+      .join("");
     try {
-      const response = await api.get(`/transactions/paginate${parameter.slice(0, -1)}`, { headers: headers });
+      const response = await api.get(
+        `/transactions/paginate${parameter.slice(0, -1)}`,
+        { headers: headers }
+      );
       state.items = response.data.data;
       state.loading = false;
       return response;

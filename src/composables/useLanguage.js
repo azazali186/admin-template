@@ -54,12 +54,13 @@ export default function useLanguage() {
     },
   ];
 
-  const token = localStorage.getItem('bi-admin-token') ? localStorage.getItem('bi-admin-token') : state.token
+  const token = localStorage.getItem("template-admin-token")
+    ? localStorage.getItem("template-admin-token")
+    : state.token;
   const headers = {};
   if (token) {
-    headers.authorization = "Bearer " + token
+    headers.authorization = "Bearer " + token;
   }
-
 
   const add = async (data) => {
     try {
@@ -113,9 +114,14 @@ export default function useLanguage() {
       props.filter !== undefined
         ? Object.assign(props.pagination, { ...props.filter })
         : props.pagination;
-    let parameter = Object.entries(params).map(([k, v]) => `${k}=${v}&`).join("")
+    let parameter = Object.entries(params)
+      .map(([k, v]) => `${k}=${v}&`)
+      .join("");
     try {
-      const response = await api.get(`/languages/paginate?${parameter.slice(0, -1)}`, { headers: headers });
+      const response = await api.get(
+        `/languages/paginate?${parameter.slice(0, -1)}`,
+        { headers: headers }
+      );
       state.items = response.data.data;
       state.loading = false;
       return response;

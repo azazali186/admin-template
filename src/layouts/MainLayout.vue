@@ -267,8 +267,8 @@ async function getLanguages() {
   } catch (error) {}
 }
 
-const token = localStorage.getItem("bi-admin-token")
-  ? localStorage.getItem("bi-admin-token")
+const token = localStorage.getItem("template-admin-token")
+  ? localStorage.getItem("template-admin-token")
   : state.token;
 const headers = {};
 if (token) {

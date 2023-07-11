@@ -10,12 +10,13 @@ export default function useConfiguration() {
     items: [],
   });
 
-  const token = localStorage.getItem('bi-admin-token') ? localStorage.getItem('bi-admin-token') : state.token
+  const token = localStorage.getItem("template-admin-token")
+    ? localStorage.getItem("template-admin-token")
+    : state.token;
   const headers = {};
   if (token) {
-    headers.authorization = "Bearer " + token
+    headers.authorization = "Bearer " + token;
   }
-
 
   const paginate = async (props) => {
     state.loading = true;
@@ -23,7 +24,9 @@ export default function useConfiguration() {
       props.filter !== undefined
         ? Object.assign(props.pagination, { ...props.filter })
         : props.pagination;
-    let parameter = Object.entries(params).map(([k, v]) => `${k}=${v}&`).join("")
+    let parameter = Object.entries(params)
+      .map(([k, v]) => `${k}=${v}&`)
+      .join("");
     try {
       const response = await api.get("/config/paginate", { params });
       state.items = response.data.data;
@@ -49,7 +52,7 @@ export default function useConfiguration() {
       //throw Error(Utils.getErrorMessage(err));
       throw Utils.getErrorMessage(err);
     }
-  }
+  };
 
   const addbotSettings = async (bot) => {
     state.loading = true;
@@ -62,7 +65,7 @@ export default function useConfiguration() {
       //throw Error(Utils.getErrorMessage(err));
       throw Utils.getErrorMessage(err);
     }
-  }
+  };
 
   const mlmGetConfiguration = async () => {
     state.loading = true;
@@ -75,7 +78,7 @@ export default function useConfiguration() {
       //throw Error(Utils.getErrorMessage(err));
       throw Utils.getErrorMessage(err);
     }
-  }
+  };
 
   const mlmAddConfiguration = async (mlm) => {
     state.loading = true;
@@ -88,8 +91,7 @@ export default function useConfiguration() {
       //throw Error(Utils.getErrorMessage(err));
       throw Utils.getErrorMessage(err);
     }
-  }
-
+  };
 
   const orderGetConfiguration = async () => {
     state.loading = true;
@@ -102,7 +104,7 @@ export default function useConfiguration() {
       //throw Error(Utils.getErrorMessage(err));
       throw Utils.getErrorMessage(err);
     }
-  }
+  };
 
   const orderAddConfiguration = async (order) => {
     state.loading = true;
@@ -115,8 +117,7 @@ export default function useConfiguration() {
       //throw Error(Utils.getErrorMessage(err));
       throw Utils.getErrorMessage(err);
     }
-  }
-
+  };
 
   const getPaymentConfiguration = async () => {
     state.loading = true;
@@ -129,13 +130,12 @@ export default function useConfiguration() {
       //throw Error(Utils.getErrorMessage(err));
       throw Utils.getErrorMessage(err);
     }
-  }
+  };
 
   const addPaymentConfiguration = async (payment) => {
     state.loading = true;
 
-
-    console.log('payment           ', payment)
+    console.log("payment           ", payment);
 
     try {
       const response = await api.post("/config/payment-master", payment);
@@ -146,9 +146,7 @@ export default function useConfiguration() {
       //throw Error(Utils.getErrorMessage(err));
       throw Utils.getErrorMessage(err);
     }
-  }
-
-
+  };
 
   return {
     ...toRefs(state),
@@ -160,6 +158,6 @@ export default function useConfiguration() {
     orderGetConfiguration,
     orderAddConfiguration,
     getPaymentConfiguration,
-    addPaymentConfiguration
+    addPaymentConfiguration,
   };
 }

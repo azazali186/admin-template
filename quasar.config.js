@@ -46,12 +46,10 @@ module.exports = configure(function (ctx) {
     build: {
       vueRouterMode: "hash", // available values: 'hash', 'history'
       env: {
-        API_URL: ctx.dev
-          ? "https://api.azazali.in/api/admin"
-          : "https://api.azazali.in/api/admin",
+        API_URL: ctx.dev ? "http://localhost:9770/" : "http://localhost:9770/",
         API_URL_LOGIN: ctx.dev
-          ? "https://api.azazali.in/api/admin"
-          : "https://api.azazali.in/api/admin",
+          ? "http://localhost:9770/auth-service/"
+          : "http://localhost:9770/auth-service/",
       },
       // transpile: false,
       // publicPath: '/',

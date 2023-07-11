@@ -13,12 +13,13 @@ export default function useMember() {
     totalWalletAmounts: {},
     totalBetAmounts: {},
     totalWinAmounts: {},
-
   });
-  const token = localStorage.getItem('bi-admin-token') ? localStorage.getItem('bi-admin-token') : state.token
+  const token = localStorage.getItem("template-admin-token")
+    ? localStorage.getItem("template-admin-token")
+    : state.token;
   const headers = {};
   if (token) {
-    headers.authorization = "Bearer " + token
+    headers.authorization = "Bearer " + token;
   }
 
   const columns = [
@@ -63,7 +64,6 @@ export default function useMember() {
       align: "center",
       sortable: true,
     },
-
 
     {
       name: "win_loss",
@@ -156,27 +156,29 @@ export default function useMember() {
 
     {
       bottomColumns: function () {
-        var retVal = []
+        var retVal = [];
         for (let i = 0; i < this.columns.length; i++) {
-          var isVisible = false
+          var isVisible = false;
           for (let j = 0; j < this.visibleColumns.length; j++) {
             if (this.visibleColumns[j] === this.columns[i].name) {
-              isVisible = true
-              break
+              isVisible = true;
+              break;
             }
           }
           if (isVisible) {
             if (this.columns[i].sums) {
               // need to calculate sum, wonder how
-              retVal.push({ name: this.columns[i].name, text: ' the sum of ' + this.columns[i].name })
+              retVal.push({
+                name: this.columns[i].name,
+                text: " the sum of " + this.columns[i].name,
+              });
             } else {
-              retVal.push({ name: this.columns[i].name, text: '' })
+              retVal.push({ name: this.columns[i].name, text: "" });
             }
           }
         }
-        return retVal
-      }
-
+        return retVal;
+      },
     },
 
     // {
@@ -240,13 +242,18 @@ export default function useMember() {
       props.filter !== undefined
         ? Object.assign(props.pagination, { ...props.filter })
         : props.pagination;
-    let parameter = Object.entries(params).map(([k, v]) => `${k}=${v}&`).join("")
+    let parameter = Object.entries(params)
+      .map(([k, v]) => `${k}=${v}&`)
+      .join("");
     try {
-      const response = await api.get(`/members/paginate?${parameter.slice(0, -1)}`, { headers: headers });
+      const response = await api.get(
+        `/members/paginate?${parameter.slice(0, -1)}`,
+        { headers: headers }
+      );
       state.items = response.data.data.data;
       state.loading = false;
       // state.totalAmounts = response.data.totalAmounts;
-      console.log('response.data.data    ', response.data.total_values);
+      console.log("response.data.data    ", response.data.total_values);
       state.totalWalletAmounts = response.data.total_values.total_wallet_amount;
       state.totalBetAmounts = response.data.total_values.total_bet_amount;
       state.totalWinAmounts = response.data.total_values.total_win_loss_amount;
@@ -290,15 +297,15 @@ export default function useMember() {
     }
   };
 
-
-
   const paginateBot = async (props) => {
     state.loading = true;
     let params =
       props.filter !== undefined
         ? Object.assign(props.pagination, { ...props.filter })
         : props.pagination;
-    let parameter = Object.entries(params).map(([k, v]) => `${k}=${v}&`).join("")
+    let parameter = Object.entries(params)
+      .map(([k, v]) => `${k}=${v}&`)
+      .join("");
     try {
       const response = await api.get("/bots/paginate", { params });
       state.items = response.data.data;
@@ -344,6 +351,6 @@ export default function useMember() {
     paginateBot,
     allBot,
     getAllLevel,
-    addBotCount
+    addBotCount,
   };
 }

@@ -10,10 +10,12 @@ export default function useStats() {
     memberItems: [],
     transactionItems: [],
   });
-  const token = localStorage.getItem('bi-admin-token') ? localStorage.getItem('bi-admin-token') : state.token
+  const token = localStorage.getItem("template-admin-token")
+    ? localStorage.getItem("template-admin-token")
+    : state.token;
   const headers = {};
   if (token) {
-    headers.authorization = "Bearer " + token
+    headers.authorization = "Bearer " + token;
   }
 
   const memberColumns = [
@@ -29,7 +31,10 @@ export default function useStats() {
       name: "member_name",
       label: "Member Name",
       required: true,
-      field: (row) => row.first_name ? row?.first_name + " " + row?.last_name : row.idd + row.phone_number,
+      field: (row) =>
+        row.first_name
+          ? row?.first_name + " " + row?.last_name
+          : row.idd + row.phone_number,
       align: "left",
       sortable: false,
     },
@@ -64,7 +69,10 @@ export default function useStats() {
       name: "member_name",
       label: "Member Name",
       required: true,
-      field: (row) => row.first_name ? row?.first_name + " " + row?.last_name : row.idd + row.phone_number,
+      field: (row) =>
+        row.first_name
+          ? row?.first_name + " " + row?.last_name
+          : row.idd + row.phone_number,
       align: "left",
       sortable: false,
     },
@@ -108,7 +116,6 @@ export default function useStats() {
     }
   };
 
-
   const getThisMonthNewMembers = async () => {
     try {
       const response = await api.get(`/stats/this-month-new-members`);
@@ -130,7 +137,6 @@ export default function useStats() {
       throw Utils.getErrorMessage(err);
     }
   };
-
 
   const getRecentMemberOnline = async () => {
     state.memberLoading = true;
@@ -220,7 +226,6 @@ export default function useStats() {
     }
   };
 
-
   return {
     ...toRefs(state),
     memberColumns,
@@ -235,6 +240,6 @@ export default function useStats() {
     slotPurchase,
     tranferAmount,
     revenueChart,
-    checkOTPbalance
+    checkOTPbalance,
   };
 }

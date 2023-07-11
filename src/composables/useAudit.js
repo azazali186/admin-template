@@ -31,7 +31,13 @@ export default function useAudit() {
       name: "user_id",
       label: "User",
       required: true,
-      field: (row) => (row?.user?.name || row?.user?.display_name || ((row?.user?.last_name || '') + " " + (row?.user?.first_name || '')) || "N/A").toUpperCase(),
+      field: (row) =>
+        (
+          row?.user?.name ||
+          row?.user?.display_name ||
+          (row?.user?.last_name || "") + " " + (row?.user?.first_name || "") ||
+          "N/A"
+        ).toUpperCase(),
       align: "center",
       sortable: true,
     },
@@ -79,10 +85,12 @@ export default function useAudit() {
     },
   ];
 
-  const token = localStorage.getItem('bi-admin-token') ? localStorage.getItem('bi-admin-token') : state.token
+  const token = localStorage.getItem("template-admin-token")
+    ? localStorage.getItem("template-admin-token")
+    : state.token;
   const headers = {};
   if (token) {
-    headers.authorization = "Bearer " + token
+    headers.authorization = "Bearer " + token;
   }
 
   const paginate = async (props) => {
@@ -91,9 +99,14 @@ export default function useAudit() {
       props.filter !== undefined
         ? Object.assign(props.pagination, { ...props.filter })
         : props.pagination;
-    let parameter = Object.entries(params).map(([k, v]) => `${k}=${v}&`).join("")
+    let parameter = Object.entries(params)
+      .map(([k, v]) => `${k}=${v}&`)
+      .join("");
     try {
-      const response = await api.get(`/audits/paginate?${parameter.slice(0, -1)}`, { headers: headers });
+      const response = await api.get(
+        `/audits/paginate?${parameter.slice(0, -1)}`,
+        { headers: headers }
+      );
       state.items = response.data.data;
       state.loading = false;
       return response;

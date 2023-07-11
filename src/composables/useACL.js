@@ -96,10 +96,12 @@ export default function useACL() {
     },
   ];
 
-  const token = localStorage.getItem('bi-admin-token') ? localStorage.getItem('bi-admin-token') : state.token
+  const token = localStorage.getItem("template-admin-token")
+    ? localStorage.getItem("template-admin-token")
+    : state.token;
   const headers = {};
   if (token) {
-    headers.authorization = "Bearer " + token
+    headers.authorization = "Bearer " + token;
   }
 
   const addRole = async (data) => {
@@ -150,7 +152,9 @@ export default function useACL() {
 
   const getPermission = async (id) => {
     try {
-      const response = await api.get(`/permissions/${id}`, { headers: headers });
+      const response = await api.get(`/permissions/${id}`, {
+        headers: headers,
+      });
       return response;
     } catch (err) {
       //throw Error(Utils.getErrorMessage(err));
@@ -164,9 +168,14 @@ export default function useACL() {
       props.filter !== undefined
         ? Object.assign(props.pagination, { ...props.filter })
         : props.pagination;
-    let parameter = Object.entries(params).map(([k, v]) => `${k}=${v}&`).join("")
+    let parameter = Object.entries(params)
+      .map(([k, v]) => `${k}=${v}&`)
+      .join("");
     try {
-      const response = await api.get(`/roles/paginate?${parameter.slice(0, -1)}`, { headers: headers });
+      const response = await api.get(
+        `/roles/paginate?${parameter.slice(0, -1)}`,
+        { headers: headers }
+      );
       state.roles = response.data.data;
       state.loading = false;
       return response;
@@ -194,9 +203,14 @@ export default function useACL() {
       props.filter !== undefined
         ? Object.assign(props.pagination, { ...props.filter })
         : props.pagination;
-    let parameter = Object.entries(params).map(([k, v]) => `${k} = ${v} & `).join("")
+    let parameter = Object.entries(params)
+      .map(([k, v]) => `${k} = ${v} & `)
+      .join("");
     try {
-      const response = await api.get(`/permissions/paginate?${parameter.slice(0, -1)}`, { headers: headers });
+      const response = await api.get(
+        `/permissions/paginate?${parameter.slice(0, -1)}`,
+        { headers: headers }
+      );
       state.permissions = response.data.data;
       state.loading = false;
       return response;

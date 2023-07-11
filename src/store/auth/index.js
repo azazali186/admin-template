@@ -19,13 +19,15 @@ function setAuth(data) {
   state.token = data.token;
   state.user.roles = data?.roles || [];
   state.user.permissions = data.permissions?.map((p) => p.name) || [];
-  localStorage.setItem('bi-admin-token', data.token)
+  localStorage.setItem("template-admin-token", data.token);
 }
 
-const token = localStorage.getItem('bi-admin-token') ? localStorage.getItem('bi-admin-token') : state.token
+const token = localStorage.getItem("template-admin-token")
+  ? localStorage.getItem("template-admin-token")
+  : state.token;
 const headers = {};
 if (token) {
-  headers.authorization = "Bearer " + token
+  headers.authorization = "Bearer " + token;
 }
 
 async function checkAuth() {
@@ -36,7 +38,7 @@ async function checkAuth() {
     // loading.value = false;
   } catch (err) {
     await logout();
-    console.log(err)
+    console.log(err);
   }
 }
 
@@ -45,7 +47,7 @@ async function logout() {
     state.loggedIn = false;
     state.user = null;
     state.token = null;
-    localStorage.removeItem('bi-admin-token')
+    localStorage.removeItem("template-admin-token");
     await api.post("/user/logout");
   } catch (err) {
     // Force redirect

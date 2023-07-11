@@ -46,7 +46,9 @@
                 lazy-rules
                 @update:model-value="resetFilters()"
                 :rules="[
-                  (val) => val.length || $t(Utils.getKey('Select Language')),
+                  (val) =>
+                    (val && val.length) ||
+                    $t(Utils.getKey('Select Language') && val),
                 ]"
               >
                 <template v-slot:prepend>
@@ -217,7 +219,7 @@ async function getLanguages() {
   try {
     const response = await all();
     localeOptions.value = response.data;
-    // locale.value = response?.data[0];
+    locale.value = response?.data[0];
   } catch (error) {}
 }
 

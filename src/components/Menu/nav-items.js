@@ -13,18 +13,18 @@ export default {
       "view-api-admin-users-stats",
       "create-api-admin-users-stats",
       "edit-update-api-admin-users",
-      "delete-api-admin-users"
+      "delete-api-admin-users",
     ],
     children: [
       {
         label: "User List",
-        icon: "mdi-group",
+        icon: "mdi-account-group",
         to: { name: "users" },
         permissions: [
           "view-api-admin-users-stats",
           "create-api-admin-users-stats",
           "edit-update-api-admin-users",
-          "delete-api-admin-users"
+          "delete-api-admin-users",
         ],
       },
     ],

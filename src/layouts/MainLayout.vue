@@ -1,46 +1,80 @@
 <template>
   <q-layout view="lHh Lpr lFf">
     <q-header>
-      <q-toolbar :class="$q.dark.isActive
-        ? 'bg-dark-page pl-0 text-theme'
-        : 'bg-accent pl-0 text-theme'
-        " class="">
-        <q-btn flat round dense :class="!leftDrawerOpen ? 'ml-5' : ''" icon="mdi-menu" aria-label="Menu"
-          @click="leftDrawerOpen = !leftDrawerOpen" />
+      <q-toolbar
+        :class="
+          $q.dark.isActive
+            ? 'bg-dark-page pl-0 text-theme'
+            : 'bg-accent pl-0 text-theme'
+        "
+        class=""
+      >
+        <q-btn
+          flat
+          round
+          dense
+          :class="!leftDrawerOpen ? 'ml-5' : ''"
+          icon="mdi-menu"
+          aria-label="Menu"
+          @click="leftDrawerOpen = !leftDrawerOpen"
+        />
 
         <q-toolbar-title>
           {{
             $t(Utils.getKey($route.meta.caption)) != "Q"
-            ? $t(Utils.getKey($route.meta.caption))
-            : $t(Utils.getKey($route.meta.subtitle))
+              ? $t(Utils.getKey($route.meta.caption))
+              : $t(Utils.getKey($route.meta.subtitle))
           }}
         </q-toolbar-title>
         <div class="mr-3 orange"></div>
-        <div style="
+        <div
+          style="
             border: 1px solid #eb7e4c;
             margin-right: 12px;
             border-radius: 4px;
             padding: 0.5px 8px;
-          ">
+          "
+        >
           <!-- <span class="gray" style="font-size: 12px">
             {{ $t("otp_balance") }}</span
               :class="userData.data < 50 ? 'red' : 'green'"
           > -->
           <div class="d-flex">
-            <p class="text-bold" style="line-height: 35px; text-transform: capitalize;">
+            <p
+              class="text-bold"
+              style="line-height: 35px; text-transform: capitalize"
+            >
               {{ userData.data.name }}
             </p>
           </div>
         </div>
-        <q-select v-model="locale" :options="localeOptions" :label="$t(Utils.getKey('Language'))" dense emit-value
-          :class="$q.dark.isActive ? '' : 'select_dark'" map-options option-label="name" option-value="code" options-dense
-          outlined :style="{
+        <q-select
+          v-model="locale"
+          :options="localeOptions"
+          :label="$t(Utils.getKey('Language'))"
+          dense
+          emit-value
+          :class="$q.dark.isActive ? '' : 'select_dark'"
+          map-options
+          option-label="name"
+          option-value="code"
+          options-dense
+          outlined
+          :style="{
             minWidth: '120px',
             borderRadius: '3px',
             color: '#000',
-          }" />
+          }"
+        />
 
-        <q-btn @click="showConfirm = true" flat round dense icon="mdi-account-key-outline" class="q-mx-sm">
+        <q-btn
+          @click="showConfirm = true"
+          flat
+          round
+          dense
+          icon="mdi-account-key-outline"
+          class="q-mx-sm"
+        >
           <q-tooltip>{{ $t(Utils.getKey("Change password")) }}</q-tooltip>
         </q-btn>
         <!-- <q-item-section avatar @click="toggleTheme">
@@ -55,27 +89,45 @@
       <tags />
     </q-header>
 
-    <q-drawer show-if-above v-model="leftDrawerOpen"
-      :class="$q.dark.isActive ? ' q-pb-md bg-grey-10' : ' q-pb-md bg-grey-1'" :width="$q.screen.width < 1420 ? 210 : 280"
+    <q-drawer
+      show-if-above
+      v-model="leftDrawerOpen"
+      :class="$q.dark.isActive ? ' q-pb-md bg-grey-10' : ' q-pb-md bg-grey-1'"
+      :width="$q.screen.width < 1420 ? 210 : 280"
       style="
-       /* background: #13112c !important; */
-        background: linear-gradient(3deg, rgba(2, 0, 36, 1) 0%, #0a0557 40%, #13112c 100%) !important;
+        /* background: #13112c !important; */
+        background: linear-gradient(
+          3deg,
+          rgba(2, 0, 36, 1) 0%,
+          #0a0557 40%,
+          #13112c 100%
+        ) !important;
 
         font-weight: 600;
         overflow: hidden;
         padding-right: 0px;
         border-right: 1px solid #ebeef5 !important;
-      ">
+      "
+    >
       <q-list class="row branding" @click="dashboard" style="cursor: pointer">
         <q-item class="col-12 logo-wrapper text-center">
           <q-item-section>
-            <q-img src="~/assets/logo.png" :style="{ maxWidth: '97px', margin: 'auto' }" />
+            <!-- <q-img src="~/assets/logo.png" :style="{ maxWidth: '97px', margin: 'auto' }" /> -->
+            <span class="sidebar-header">{{
+              $t(Utils.getKey("template_admin"))
+            }}</span>
           </q-item-section>
         </q-item>
       </q-list>
       <q-separator />
       <q-list>
-        <q-item to="/" clickable active-class="active-menu-link-dark" class="q-py-none q-my-md nav-item-wrapper" exact>
+        <q-item
+          to="/"
+          clickable
+          active-class="active-menu-link-dark"
+          class="q-py-none q-my-md nav-item-wrapper"
+          exact
+        >
           <q-item-section avatar>
             <q-icon name="mdi-desktop-mac-dashboard" size="xs" />
           </q-item-section>
@@ -86,30 +138,51 @@
         </q-item>
 
         <template v-for="(modul, key, j) in navItems">
-          <template v-if="modul.permissions.some((p) => permissions.includes(p))">
+          <template
+            v-if="modul.permissions.some((p) => permissions.includes(p))"
+          >
             <div :key="j">
-              <q-expansion-item v-if="modul.children.length > 0" :label="$t(Utils.getKey(modul.label))"
-                class="q-my-sm side_menu" :header-style="{
+              <q-expansion-item
+                v-if="modul.children.length > 0"
+                :label="$t(Utils.getKey(modul.label))"
+                class="q-my-sm side_menu"
+                :header-style="{
                   textTransform: 'uppercase',
                   fontWeight: 'bold',
                   marginBottom: '8px',
-                }" :default-opened="!hideCollaps.includes(modul.label)" :content-inset-level="0.2">
+                }"
+                :default-opened="!hideCollaps.includes(modul.label)"
+                :content-inset-level="0.2"
+              >
                 <template v-for="(item, i) in modul.children" :key="i">
-                  <menu-items v-if="item.permissions.some((p) => permissions.includes(p))" :key="key + '-' + i"
-                    :label="item.label" :icon="item.icon" :to="item.to" @click="menuClick(item.to)" />
+                  <menu-items
+                    v-if="item.permissions.some((p) => permissions.includes(p))"
+                    :key="key + '-' + i"
+                    :label="item.label"
+                    :icon="item.icon"
+                    :to="item.to"
+                    @click="menuClick(item.to)"
+                  />
                 </template>
               </q-expansion-item>
 
-              <q-item v-if="modul.children.length === 0 &&
-                modul.permissions.some((p) => permissions.includes(p))
-                " exact clickable active-class="active-menu-link-dark" class="q-py-none q-my-md nav-item-wrapper"
-                :to="modul.to">
+              <q-item
+                v-if="
+                  modul.children.length === 0 &&
+                  modul.permissions.some((p) => permissions.includes(p))
+                "
+                exact
+                clickable
+                active-class="active-menu-link-dark"
+                class="q-py-none q-my-md nav-item-wrapper"
+                :to="modul.to"
+              >
                 <q-item-section avatar>
                   <q-icon :name="modul.icon" size="xs" />
                 </q-item-section>
                 <q-item-section>
                   <q-item-label>{{
-                    $t(Utils.getKey(modul.label))
+                    $t(Utils.getKey(modul.icon))
                   }}</q-item-label>
                 </q-item-section>
               </q-item>
@@ -191,22 +264,22 @@ async function getLanguages() {
   try {
     const response = await all();
     localeOptions.value = response.data;
-  } catch (error) { }
+  } catch (error) {}
 }
 
-
-const token = localStorage.getItem('bi-admin-token') ? localStorage.getItem('bi-admin-token') : state.token
+const token = localStorage.getItem("bi-admin-token")
+  ? localStorage.getItem("bi-admin-token")
+  : state.token;
 const headers = {};
 if (token) {
-  headers.authorization = "Bearer " + token
+  headers.authorization = "Bearer " + token;
 }
-
 
 const logout = async () => {
   try {
     await auth.logout();
     router.push("/auth/login");
-  } catch (error) { }
+  } catch (error) {}
 };
 const isSame = ref("");
 const menuClick = (link) => {
@@ -215,8 +288,6 @@ const menuClick = (link) => {
     store.isOne = false;
   }
 };
-
-
 
 const dashboard = () => {
   router.push("/");

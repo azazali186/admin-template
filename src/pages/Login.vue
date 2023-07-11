@@ -41,7 +41,7 @@
                 emit-value
                 map-options
                 option-label="name"
-                option-value="locale"
+                option-value="code"
                 outlined
                 lazy-rules
                 @update:model-value="resetFilters()"
@@ -210,16 +210,14 @@ getLanguages();
 
 watch(locale, (newValue, _) => {
   localStorage.setItem("locale", newValue);
-  //this.form.reset();
+  // this.form.reset();
 });
-
-// console.log('locale.value       ', locale.value)
 
 async function getLanguages() {
   try {
     const response = await all();
     localeOptions.value = response.data;
-    locale.value = response?.data[0];
+    locale.value = response?.data[0]?.code;
   } catch (error) {}
 }
 

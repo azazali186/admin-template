@@ -11,6 +11,12 @@ i,
   color: #ebeef5;
 }
 
+.sidebar-header {
+  font-size: 28px;
+  text-decoration: solid;
+  font-weight: 700;
+}
+
 .bg-part-login {
   position: relative;
   position: relative;
@@ -414,7 +420,12 @@ i,
 }
 .bg-dark-page {
   // background-color: var(--q-dark-page);
-  background: linear-gradient(3deg, rgba(2, 0, 36, 1) 0%, #0a0557 40%, #13112c 100%);
+  background: linear-gradient(
+    3deg,
+    rgba(2, 0, 36, 1) 0%,
+    #0a0557 40%,
+    #13112c 100%
+  );
 }
 .b_dark_grey {
   background-color: #4e4e4e;

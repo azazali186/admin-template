@@ -89,15 +89,13 @@ const routes = [
         meta: { title: "Currency", subtitle: "Country" },
       },
 
-
       // Members MANAGEMENT
       {
         name: "members",
         path: "/members",
         component: () => import("pages/Members/Index.vue"),
         meta: { title: "Members", subtitle: "Member List" },
-      }
-
+      },
     ],
   },
 
